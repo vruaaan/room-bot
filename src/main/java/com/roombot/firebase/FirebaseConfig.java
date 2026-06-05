@@ -1,0 +1,3 @@
+/* Initialises Firebase SDK once
+Returns Firestore instance
+*/
