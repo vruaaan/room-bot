@@ -18,7 +18,7 @@ public class FirestoreSvc { // for talking to firestore
         DocumentReference ref = db.collection(collection).document();
         ref.set(data).get(); // .get() blocks until Firestore confirms
         return ref.getId(); // return the auto-generated document ID
-    }
+    } 
 
     public List<QueryDocumentSnapshot> findAll(String collection) // takes in a string to indicate the collection it is finding 
             throws ExecutionException, InterruptedException { // for reading data from firestore 
