@@ -9,7 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 // importing the commands 
-import com.roombot.commands.DateCmd; 
+import com.roombot.commands.DateCmd;
+import com.roombot.commands.HelpCmd;
 import com.roombot.commands.RoomsCmd;
 import com.roombot.commands.MyBookingsCmd;
 import com.roombot.commands.TodayCmd;
@@ -18,21 +19,23 @@ import com.roombot.commands.BookCmd;
 
 public class Bot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
-    private final RoomsCmd RoomsCmd;
-    private final DateCmd DateCmd;
-    private final MyBookingsCmd MyBookingsCmd;
-    private final TodayCmd TodayCmd;
-    private final TmrCmd TmrCmd;
-    private final BookCmd BookCmd;
+    private final RoomsCmd roomsCmd;
+    private final DateCmd dateCmd;
+    private final MyBookingsCmd myBookingsCmd;
+    private final TodayCmd tdyCmd;
+    private final TmrCmd tmrCmd;
+    private final BookCmd bookCmd;
+    private final HelpCmd helpCmd;
 
     public Bot(String botToken) {
         this.telegramClient = new OkHttpTelegramClient(botToken);
-        this.RoomsCmd = new RoomsCmd(telegramClient);
-        this.DateCmd = new DateCmd(telegramClient);
-        this.MyBookingsCmd = new MyBookingsCmd(telegramClient);
-        this.TodayCmd = new TodayCmd(telegramClient);
-        this.TmrCmd = new TmrCmd(telegramClient);
-        this.BookCmd = new BookCmd(telegramClient);
+        this.roomsCmd = new RoomsCmd(telegramClient);
+        this.dateCmd = new DateCmd(telegramClient);
+        this.myBookingsCmd = new MyBookingsCmd(telegramClient);
+        this.tdyCmd = new TodayCmd(telegramClient);
+        this.tmrCmd = new TmrCmd(telegramClient);
+        this.bookCmd = new BookCmd(telegramClient);
+        this.helpCmd = new HelpCmd(telegramClient);
     }
 
     @Override
@@ -43,12 +46,20 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
         String text = update.getMessage().getText().trim(); //parsing message into string
         String chatId = update.getMessage().getChatId().toString();
 
-        if (text.startsWith("/seerooms")) { // calling seerooms
-            seeRoomsCmd.execute(chatId, text);
-        } else if (text.startsWith("/seedate")) { // calling seedate
-            seeDateCmd.execute(chatId, text);
+        if (text.startsWith("/rooms")) { // calling /rooms
+            roomsCmd.execute(chatId, text);
+        } else if (text.startsWith("/date")) { // calling /date
+            dateCmd.execute(chatId, text);
+        } else if (text.startsWith("/mybookings")){ // calling /mybookings
+            myBookingsCmd.execute(chatId, text);
+        } else if (text.startsWith("/book")) { // calling /book 
+            bookCmd.execute(chatId, text);
+        } else if (text.startsWith("/tdy")) { // calling /tdy
+            tdyCmd.execute(chatId, text);
+        } else if (text.startsWith("/tmr")) { // calling /tmr
+            tmrCmd.execute(chatId, text);
         } else if (text.startsWith("/start") || text.startsWith("/help")) { // calling /start or /help
-            sendHelp(chatId);
+            helpCmd.execute(chatId, text);
         } else { // unrecognisable command
             sendText(chatId, "Unknown command. Type /help to see what I can do.");
         }
@@ -56,31 +67,10 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
 
 
     // helper functions 
-    private void sendHelp(String chatId) { // for sending users guiding instructions, triggered by /help
-        String help = """
-                *Room Reservation Bot*
-                /seerooms — list all available rooms
-                /seedate <YYYY-MM-DD> — check availability for a date
-                /reserve <room> <date> <time> — make a reservation _(coming soon)_
-                /myreservations — your upcoming bookings _(coming soon)_
-                /cancel <id> — cancel a booking _(coming soon)_
-                """;
-        sendMarkdown(chatId, help);
-    }
-
     private void sendText(String chatId, String text) { // for returning messages to users
         SendMessage msg = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
-                .build();
-        execute(msg);
-    }
-
-    private void sendMarkdown(String chatId, String markdown) { 
-        SendMessage msg = SendMessage.builder()
-                .chatId(chatId)
-                .text(markdown)
-                .parseMode("Markdown")
                 .build();
         execute(msg);
     }
