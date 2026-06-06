@@ -1,3 +1,25 @@
+# credentials — never commit these
 .env
-
 firebaseaccount.json
+
+# Maven build output
+target/
+
+# IDE files — IntelliJ
+.idea/
+*.iml
+
+# IDE files — VS Code
+.vscode/
+
+# IDE files — Eclipse
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
