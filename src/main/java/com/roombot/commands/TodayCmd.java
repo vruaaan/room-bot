@@ -1,5 +1,15 @@
 package com.roombot.commands;
 
-public class TodayCmd {
-    
+import org.telegram.telegrambots.meta.generics.TelegramClient;
+
+public class TodayCmd extends Cmd {
+
+    public TodayCmd(TelegramClient telegramClient) {
+        super(telegramClient); // calling constructor from superclass
+    }
+
+    @Override
+    public void execute(String chatId, String text) { // INCOMPLETE
+        sendMarkdown(chatId, "*Available rooms:* ...");
+    }
 }
