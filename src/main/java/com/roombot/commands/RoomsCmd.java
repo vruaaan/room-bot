@@ -10,6 +10,13 @@ public class RoomsCmd extends Cmd {
 
     @Override
     public void execute(String chatId, String text) { // INCOMPLETE
+        String roomName = extractRoom(text);
+
         sendMarkdown(chatId, "*Available rooms:* ...");
     }
+
+    private String extractRoom(String text) {
+        if 
+    }
+
 }
