@@ -6,9 +6,9 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
 import java.util.Optional;
 
-public class ParseTimes {
-
-    private static final Map<String, DayOfWeek> DAY_ALIASES = Map.of(
+public class ParseDay {
+    // Map to use as a form of dictionary
+    private static final Map<String, DayOfWeek> DAY_ALIASES = Map.of( 
         "monday", DayOfWeek.MONDAY,
         "mon", DayOfWeek.MONDAY,
         "tuesday", DayOfWeek.TUESDAY,
@@ -23,28 +23,17 @@ public class ParseTimes {
 
     private static final Map<String, DayOfWeek> DAY_ALIASES_2 = Map.of( //Map.of capped at 10 items
         "saturday", DayOfWeek.SATURDAY,
-        "sat",      DayOfWeek.SATURDAY,
-        "sunday",   DayOfWeek.SUNDAY,
-        "sun",      DayOfWeek.SUNDAY
+        "sat", DayOfWeek.SATURDAY,
+        "sunday", DayOfWeek.SUNDAY,
+        "sun", DayOfWeek.SUNDAY
     );
-
-    /**
-     * Parses a natural-language date string into a LocalDate.
-     *
-     * Recognised inputs (case-insensitive):
-     *   today, tdy, tonight       → today
-     *   tomorrow, tmr, tmrw       → tomorrow
-     *   monday … sunday / mon … sun → next occurrence of that weekday (today counts)
-     *   next monday … next sunday  → the occurrence at least 1 day away
-     *
-     */
+    
     public static Optional<LocalDate> parse(String input) {
         if (input == null) {
             return Optional.empty();
         }
-        String normalised = input.trim().toLowerCase();
-        LocalDate today = LocalDate.now();
-
+        String normalised = input.trim().toLowerCase(); // formatting to readable form 
+        LocalDate today = LocalDate.now(); // get current date
         switch (normalised) {
             case "today":
             case "tdy":
@@ -60,14 +49,14 @@ public class ParseTimes {
         // "next <day>" — strictly next week (always at least 1 day away)
         if (normalised.startsWith("next ")) {
             String dayPart = normalised.substring(5).trim();
-            DayOfWeek dow = lookupDay(dayPart);
+            DayOfWeek dow = Map(dayPart);
             if (dow == null) return Optional.empty();
             // TemporalAdjusters.next() always moves forward, never stays on today
             return Optional.of(today.with(TemporalAdjusters.next(dow)));
         }
 
         // bare weekday name — next occurrence including today
-        DayOfWeek dow = lookupDay(normalised);
+        DayOfWeek dow = checkMap(normalised);
         if (dow != null) {
             return Optional.of(today.with(TemporalAdjusters.nextOrSame(dow)));
         }
@@ -75,8 +64,11 @@ public class ParseTimes {
         return Optional.empty();
     }
 
+
+
+
     private static DayOfWeek checkMap(String text) {
         DayOfWeek dow = DAY_ALIASES.get(text);
-        return dow != null ? dow : DAY_ALIASES_2.get(string);
+        return dow != null ? dow : DAY_ALIASES_2.get(text);
     }
 }
