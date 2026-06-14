@@ -71,9 +71,6 @@ src/main/java/com/roombot/
     └── ParseTime.java             # time parsing (3pm / 15:30 / 1530 / noon …)
 ```
 
-> A full, copy-pasteable reference implementation of every file lives in
-> [`COMPLETED_CODE.md`](COMPLETED_CODE.md).
-
 ---
 
 ## Prerequisites
