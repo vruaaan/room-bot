@@ -42,8 +42,6 @@ public class FirestoreSvc { // for talking to firestore
                  .get().get();
     }
 
-    // ── delete ────────────────────────────────────────────────────────────────
-
     public void delete(String collection, String documentId) // takes in a string for the exact collection and documentId that it is looking for
             throws ExecutionException, InterruptedException { // deletes the document inside the specified collection with the specefic documentId
         db.collection(collection)

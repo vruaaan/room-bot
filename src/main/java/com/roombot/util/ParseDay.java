@@ -46,13 +46,22 @@ public class ParseDay {
             default:
                 break;
         }
-        // "next <day>" — strictly next week (always at least 1 day away)
+
+        // "next <day>" — each "next" advances by one additional week
         if (normalised.startsWith("next ")) {
-            String dayPart = normalised.substring(5).trim();
-            DayOfWeek dow = Map(dayPart);
-            if (dow == null) return Optional.empty();
-            // TemporalAdjusters.next() always moves forward, never stays on today
-            return Optional.of(today.with(TemporalAdjusters.next(dow)));
+            int extraWeeks = 0;
+            String remaining = normalised;
+            while (remaining.startsWith("next ")) {
+                extraWeeks++;
+                remaining = remaining.substring(5).trim();
+            }
+            DayOfWeek dow = checkMap(remaining);
+            if (dow == null) {
+                return Optional.empty();
+            }
+            // Each additional "next" adds another 7 days on top.
+            LocalDate base = today.with(TemporalAdjusters.next(dow)); //first "next" uses TemporalAdjusters.next() to always move forward at least 1 day.
+            return Optional.of(base.plusWeeks(extraWeeks - 1));
         }
 
         // bare weekday name — next occurrence including today
@@ -63,9 +72,6 @@ public class ParseDay {
 
         return Optional.empty();
     }
-
-
-
 
     private static DayOfWeek checkMap(String text) {
         DayOfWeek dow = DAY_ALIASES.get(text);
