@@ -4,14 +4,18 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import com.roombot.service.ReservationSvc;
+
 abstract class Cmd {
     protected final TelegramClient telegramClient;
+    protected final ReservationSvc resSvc;
 
-    Cmd(TelegramClient telegramClient) { // called by subclasses
+    Cmd(TelegramClient telegramClient, ReservationSvc resSvc) { // called by subclasses
         this.telegramClient = telegramClient;
+        this.resSvc = resSvc;
     }
 
-    public abstract void execute(String chatId, String text); // must be implemented by subclasses 
+    public abstract void execute(String chatId, String userHandle, String text); // must be implemented by subclasses 
 
     //helper functions that all other commands can call 
     protected void sendText(String chatId, String text) {

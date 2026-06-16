@@ -8,8 +8,5 @@ public class TodayCmd extends Cmd {
         super(telegramClient); // calling constructor from superclass
     }
 
-    @Override
-    public void execute(String chatId, String text) { // INCOMPLETE
-        sendMarkdown(chatId, "*Available rooms:* ...");
-    }
+
 }

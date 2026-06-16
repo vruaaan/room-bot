@@ -10,7 +10,7 @@ public class BookMessage {
     private final LocalTime timeEnd;
     private final String venue;
 
-    BookMessage(String userHandle, LocalDate date, LocalTime timeStart, LocalTime timeEnd, String venue) {
+    public BookMessage(String userHandle, LocalDate date, LocalTime timeStart, LocalTime timeEnd, String venue) {
         this.userHandle = userHandle;
         this.date = date;
         this.timeStart = timeStart;
