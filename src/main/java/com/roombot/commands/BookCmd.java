@@ -3,7 +3,7 @@ package com.roombot.commands;
 import com.roombot.model.Reservation;
 import com.roombot.service.ReservationSvc;
 import com.roombot.util.ParseMessage;
-import com.roombot.util.ParseDay;
+import com.roombot.util.ParseDate;
 import com.roombot.util.ParseTime;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
