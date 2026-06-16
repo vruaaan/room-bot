@@ -27,35 +27,35 @@ Reminders are intentionally not implemented in the current version.
 
 ```text
 src/main/java/com/roombot/
-|-- Main.java                    # Loads config, initializes Firebase, starts Telegram long polling
-|-- Bot.java                     # Routes incoming Telegram messages to command handlers
+├── Main.java                    # Loads config, initializes Firebase, starts Telegram long polling
+├── Bot.java                     # Routes incoming Telegram messages to command handlers
 |
-|-- commands/
-|   |-- Cmd.java                 # Base command class with send and argument helpers
-|   |-- BookCmd.java             # /book - create a booking
-|   |-- RoomsCmd.java            # /rooms - bookings for a venue
-|   |-- DateCmd.java             # /date - bookings for a date
-|   |-- TodayCmd.java            # /tdy - today's bookings
-|   |-- TmrCmd.java              # /tmr - tomorrow's bookings
-|   |-- MineCmd.java             # /mybookings - bookings made by the current Telegram user
-|   |-- HelpCmd.java             # /help and /start
-|   `-- UnknownCmd.java          # Fallback for unrecognized commands
+├── commands/
+|   ├── Cmd.java                 # Base command class with send and argument helpers
+|   ├── BookCmd.java             # /book - create a booking
+|   ├── RoomsCmd.java            # /rooms - bookings for a venue
+|   ├── DateCmd.java             # /date - bookings for a date
+|   ├── TodayCmd.java            # /tdy - today's bookings
+|   ├── TmrCmd.java              # /tmr - tomorrow's bookings
+|   ├── MineCmd.java             # /mybookings - bookings made by the current Telegram user
+|   ├── HelpCmd.java             # /help and /start
+|   └── UnknownCmd.java          # Fallback for unrecognized commands
 |
-|-- model/
-|   `-- Reservation.java         # Reservation domain object and Firestore payload conversion
+├── model/
+|   └── Reservation.java         # Reservation domain object and Firestore payload conversion
 |
-|-- service/
-|   |-- FirestoreSvc.java        # Low-level Firestore save/find/delete helpers
-|   `-- ReservationSvc.java      # Reservation queries and conflict checks
+├── service/
+|   ├── FirestoreSvc.java        # Low-level Firestore save/find/delete helpers
+|   └── ReservationSvc.java      # Reservation queries and conflict checks
 |
-|-- firebase/
-|   `-- FirebaseConfig.java      # Firebase Admin SDK initialization
+├── firebase/
+|   └── FirebaseConfig.java      # Firebase Admin SDK initialization
 |
-`-- util/
-    |-- ParseDate.java           # Date parsing
-    |-- ParseTime.java           # Time parsing
-    |-- ParseVenue.java          # Venue parsing and canonical venue names
-    `-- ParseMessage.java        # Formats outgoing bot messages
+└── util/
+    ├── ParseDate.java           # Date parsing
+    ├── ParseTime.java           # Time parsing
+    ├── ParseVenue.java          # Venue parsing and canonical venue names
+    └── ParseMessage.java        # Formats outgoing bot messages
 ```
 
 ## Prerequisites
@@ -121,7 +121,7 @@ java -jar target/telegram-reminder-bot-1.0-SNAPSHOT.jar
 | `/date <date>` | Show bookings for a date |
 | `/tdy` | Show today's bookings |
 | `/tmr` | Show tomorrow's bookings |
-| `/mybookings` | Show bookings made by your Telegram username |
+| `/mine` | Show bookings made by your Telegram username |
 | `/help`, `/start` | Show the help message |
 
 There are no interactive menus or reply prompts in the current implementation.
