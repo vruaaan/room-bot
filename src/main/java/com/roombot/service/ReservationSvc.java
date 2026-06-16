@@ -46,6 +46,6 @@ public class ReservationSvc { // additional layer that utilises CRUD functions f
     }
 
     private static List<Reservation> dbToRes(List<QueryDocumentSnapshot> docs) {  
-        return docs.stream().map(d -> Reservation.fromSnapshot(d)).toList();
+        return docs.stream().map(d -> Reservation.dbToRes(d)).toList();
     }
 }

@@ -2,9 +2,9 @@ package com.roombot.commands;
 
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-public class MyBookingsCmd extends Cmd {
+public class MineCmd extends Cmd {
 
-    public MyBookingsCmd(TelegramClient telegramClient) {
+    public MineCmd(TelegramClient telegramClient) {
         super(telegramClient); // calling constructor from superclass
     }
 

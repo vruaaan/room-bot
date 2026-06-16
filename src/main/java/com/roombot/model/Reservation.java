@@ -1,5 +1,5 @@
 package com.roombot.model;
-import com.roombot.util.BookMessage;
+import com.roombot.util.ParseMessage;
 
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
@@ -41,6 +41,10 @@ public class Reservation {
 
     public String getVenue() {
         return venue;
+    }
+
+    public String getPOC() {
+        return teleHandle;
     }
 
     private LocalDateTime startDateTime() { 
@@ -88,7 +92,10 @@ public class Reservation {
         return r;
     }
 
+    @Override
     public String toString() {
-        return new BookMessage(this.teleHandle, this.dateStart, this.timeStart, this.timeEnd, this.venue).toString();
-    }
+        return venue + " booked on " + dateStart + ": " + timeStart.toString() + " - " + timeEnd.toString();
+    }   
+
+
 }

@@ -1,17 +1,14 @@
 package com.roombot.util;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ParseDate {
-    // Map to use as a form of dictionary
-    private static final Map<String, Month> MONTH_ALIASES = Map.of( 
+    private static final Map<String, Month> MONTH_ALIASES = Map.of( // Map to use as a form of dictionary
         "jan", Month.JANUARY,
         "feb", Month.FEBRUARY,
         "mar", Month.MARCH,

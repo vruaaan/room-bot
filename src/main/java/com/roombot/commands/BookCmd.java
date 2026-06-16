@@ -2,7 +2,7 @@ package com.roombot.commands;
 
 import com.roombot.model.Reservation;
 import com.roombot.service.ReservationSvc;
-import com.roombot.util.MessageUtils;
+import com.roombot.util.ParseMessage;
 import com.roombot.util.ParseDay;
 import com.roombot.util.ParseTime;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -26,7 +26,7 @@ public class BookCmd extends Cmd {
     }
 
     @Override
-    public void execute(String chatId, String userHandle, String text) {
+    public void execute(String chatId, String teleHandle, String text) {
         String[] parts = text.split("\\s+"); // to split by amount of whitespace
         if (parts.length < 5) { // for improper usage 
             sendText(chatId, USAGE); // return usage message
@@ -47,21 +47,20 @@ public class BookCmd extends Cmd {
         }
         Optional<Reservation> res = date.flatMap(d -> 
             start.flatMap(s-> 
-                end.map(e -> new Reservation(userHandle, chatId, venue, d, s, d, e)) 
+                end.map(e -> new Reservation(teleHandle, chatId, venue, d, s, d, e)) 
             )
         );
 
         
         Reservation reservation = new Reservation(
-                userHandle, chatId, venue,
+                teleHandle, chatId, venue,
                 date.get(), start.get(),
                 date.get(), end.get());
 
 
         try {
-            if (reservations.hasConflict(reservation)) {
-                sendText(chatId, "That slot clashes with an existing booking for " + venue + ".");
-                return;
+            if (Reservations.hasConflict(reservation)) {
+                sendText(chatId,);
             }
             reservations.create(reservation);
             sendMarkdown(chatId, "*Booked!*\n" + MessageUtils.formatReservation(reservation));

@@ -15,7 +15,7 @@ abstract class Cmd {
         this.resSvc = resSvc;
     }
 
-    public abstract void execute(String chatId, String userHandle, String text); // must be implemented by subclasses 
+    public abstract void execute(String chatId, String teleHandle, String text); // must be implemented by subclasses 
 
     //helper functions that all other commands can call 
     protected void sendText(String chatId, String text) {

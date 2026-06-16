@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import com.roombot.commands.DateCmd;
 import com.roombot.commands.HelpCmd;
 import com.roombot.commands.RoomsCmd;
-import com.roombot.commands.MyBookingsCmd;
+import com.roombot.commands.MineCmd;
 import com.roombot.commands.TodayCmd;
 import com.roombot.commands.TmrCmd;
 import com.roombot.commands.BookCmd;
@@ -21,7 +21,7 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final RoomsCmd roomsCmd;
     private final DateCmd dateCmd;
-    private final MyBookingsCmd myBookingsCmd;
+    private final MineCmd myBookingsCmd;
     private final TodayCmd tdyCmd;
     private final TmrCmd tmrCmd;
     private final BookCmd bookCmd;
@@ -31,7 +31,7 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
         this.telegramClient = new OkHttpTelegramClient(botToken);
         this.roomsCmd = new RoomsCmd(telegramClient);
         this.dateCmd = new DateCmd(telegramClient);
-        this.myBookingsCmd = new MyBookingsCmd(telegramClient);
+        this.myBookingsCmd = new MineCmd(telegramClient);
         this.tdyCmd = new TodayCmd(telegramClient);
         this.tmrCmd = new TmrCmd(telegramClient);
         this.bookCmd = new BookCmd(telegramClient);
