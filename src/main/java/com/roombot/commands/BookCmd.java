@@ -2,14 +2,15 @@ package com.roombot.commands;
 
 import com.roombot.model.Reservation;
 import com.roombot.service.ReservationSvc;
-import com.roombot.util.ParseMessage;
 import com.roombot.util.ParseDate;
 import com.roombot.util.ParseTime;
+import com.roombot.util.ParseVenue;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
 import java.util.Optional;
 
 public class BookCmd extends Cmd {
@@ -27,59 +28,73 @@ public class BookCmd extends Cmd {
 
     @Override
     public void execute(String chatId, String teleHandle, String text) {
-        String[] parts = text.split("\\s+"); // to split by amount of whitespace
-        if (parts.length < 5) { // for improper usage 
+        String args = this.parseArgs(text);
+        String[] parts = args.split("\\s+"); // to split by amount of whitespace
+        if (parts.length < 4) { // for improper usage 
             sendText(chatId, USAGE); // return usage message
+            return;
         }
-        String venue = parts[1];
-        Optional<LocalDate> date = parseDate(parts[2]);
-        Optional<LocalTime> start = ParseTime.parse(parts[3]);
-        Optional<LocalTime> end = ParseTime.parse(parts[4]);
 
-        if (date.isEmpty()) {
-            sendText(chatId, DATEISSUE + parts[2] + "\".");
+        Optional<LocalTime> start = ParseTime.parse(parts[parts.length - 2]);
+        Optional<LocalTime> end = ParseTime.parse(parts[parts.length - 1]);
+        Optional<BookArgs> bookArgs = parseBookArgs(parts);
+
+        if (bookArgs.isEmpty() || start.isEmpty() || end.isEmpty() || !end.get().isAfter(start.get())) {
+            sendText(chatId, buildErrorMessage(
+                    bookArgs.map(BookArgs::date),
+                    start,
+                    end));
+            return;
         }
-        else if (start.isEmpty() || end.isEmpty()) {
-            sendText(chatId, TIMEISSUE);
-        }
-        if (!end.get().isAfter(start.get())) {
-            sendText(chatId, TIMELOGIC);
-        }
-        Optional<Reservation> res = date.flatMap(d -> 
-            start.flatMap(s-> 
-                end.map(e -> new Reservation(teleHandle, chatId, venue, d, s, d, e)) 
-            )
-        );
 
-        
-        Reservation reservation = new Reservation(
-                teleHandle, chatId, venue,
-                date.get(), start.get(),
-                date.get(), end.get());
-
-
+        BookArgs parsed = bookArgs.get();
+        Reservation res = new Reservation(teleHandle, chatId, parsed.venue(), parsed.date(), start.get(), parsed.date(), end.get());
         try {
-            if (Reservations.hasConflict(reservation)) {
-                sendText(chatId,);
+            if (resSvc.hasConflict(res)) {
+                sendText(chatId, "This slot clashes with an existing booking.");
+                return; // to break the loop 
             }
-            reservations.create(reservation);
-            sendMarkdown(chatId, "*Booked!*\n" + MessageUtils.formatReservation(reservation));
+            resSvc.create(res);
+            sendMarkdown(chatId, "*Booked!*\n" + res.toString());
         } catch (Exception e) {
-            System.err.println("[BookCmd] save failed: " + e.getMessage());
-            sendText(chatId, "Sorry, something went wrong saving your booking. Please try again.");
+            System.err.println("/book save failed: " + e.getMessage());
+            sendText(chatId, "Something went wrong, please try again.");
         }
     }
 
-    private Optional<LocalDate> parseDate(String token) { // utilising the parsing 
-        Optional<LocalDate> natural = ParseDay.parse(token);
-        Optional<LocalDate> 
-        if (natural.isPresent()) {
-            return natural;
+    private Optional<BookArgs> parseBookArgs(String[] parts) {
+        int dateEndExclusive = parts.length - 2;
+        for (int venueEndExclusive = 1; venueEndExclusive < dateEndExclusive; venueEndExclusive++) {
+            String venueText = join(parts, 0, venueEndExclusive);
+            String dateText = join(parts, venueEndExclusive, dateEndExclusive);
+
+            Optional<String> venue = ParseVenue.parse(venueText);
+            Optional<LocalDate> date = ParseDate.parse(dateText);
+            if (venue.isPresent() && date.isPresent()) {
+                return Optional.of(new BookArgs(venue.get(), date.get()));
+            }
         }
-        try {
-            return Optional.of(LocalDate.parse(token, DateTimeFormatter.ISO_LOCAL_DATE));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return Optional.empty();
     }
+
+    private String join(String[] parts, int from, int to) {
+        return String.join(" ", Arrays.copyOfRange(parts, from, to));
+    }
+
+    private String buildErrorMessage(Optional<LocalDate> date, Optional<LocalTime> start, Optional<LocalTime> end) {
+        if (date.isEmpty()) {
+            return DATEISSUE;
+        } else if (start.isEmpty()) {
+            return TIMEISSUE;
+        } else if (end.isEmpty()) {
+            return TIMEISSUE;
+        } else if (start.isPresent() && end.isPresent() && !end.get().isAfter(start.get())) {  // start and end both present but end not after start
+            return TIMELOGIC; 
+        }
+        return "Invalid input.";
+    }
+
+    private record BookArgs(String venue, LocalDate date) {
+    }
+
 }

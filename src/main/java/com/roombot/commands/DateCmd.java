@@ -15,13 +15,14 @@ public class DateCmd extends Cmd {
 
     @Override
     public void execute(String chatId, String teleHandle, String text) {
+        String args = this.parseArgs(text);
         try {
-            LocalDate date = ParseDate.parse(text)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid date"));
+            LocalDate date = ParseDate.parse(args)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid date / date format"));
             String response = ParseMessage.parseDate(date, resSvc.findByDate(date));
             sendText(chatId, response);
         } catch (IllegalArgumentException e) {
-            sendText(chatId, "Invalid date format.");
+            sendText(chatId, e.getMessage());
         } catch (Exception e) {
             System.err.println("/date failed: " + e.getMessage());
             sendText(chatId, "Something went wrong, please try again");

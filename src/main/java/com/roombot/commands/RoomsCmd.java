@@ -2,21 +2,30 @@ package com.roombot.commands;
 
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-public class RoomsCmd extends Cmd {
+import com.roombot.service.ReservationSvc;
+import com.roombot.util.ParseVenue;
+import com.roombot.util.ParseMessage;
 
-    public RoomsCmd(TelegramClient telegramClient) {
-        super(telegramClient); // calling constructor from superclass
+public class RoomsCmd extends Cmd {
+    public RoomsCmd(TelegramClient telegramClient, ReservationSvc resSvc) {
+        super(telegramClient, resSvc); // calling constructor from superclas
     }
 
     @Override
-    public void execute(String chatId, String text) { // INCOMPLETE
-        String roomName = extractRoom(text);
-
-        sendMarkdown(chatId, "*Available rooms:* ...");
+    public void execute(String chatId, String teleHandle, String text) {
+        String args = this.parseArgs(text);
+        try {
+            String venue = ParseVenue.parse(args)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid venue/venue format"));
+            String response = ParseMessage.parseRoom(venue, resSvc.findByVenue(venue));
+            sendText(chatId, response);
+        } catch (IllegalArgumentException e) {
+            sendText(chatId, e.getMessage());
+        } catch (Exception e) {
+            System.err.println("/room failed: " + e.getMessage());
+            sendText(chatId, "Something went wrong, please try again");
+        }
     }
 
-    private String extractRoom(String text) {
-        if 
-    }
 
 }

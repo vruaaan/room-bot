@@ -1,12 +1,11 @@
 package com.roombot.commands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import com.roombot.service.ReservationSvc;
 
-abstract class Cmd {
+public abstract class Cmd {
     protected final TelegramClient telegramClient;
     protected final ReservationSvc resSvc;
 
@@ -14,7 +13,7 @@ abstract class Cmd {
         this.telegramClient = telegramClient;
         this.resSvc = resSvc;
     }
-
+    
     public abstract void execute(String chatId, String teleHandle, String text); // must be implemented by subclasses 
 
     //helper functions that all other commands can call 
@@ -33,6 +32,20 @@ abstract class Cmd {
                 .parseMode("Markdown")
                 .build();
         execute(msg);
+    }
+
+    protected String parseArgs(String text) {
+        if (text == null) {
+            return "";
+        }
+
+        String trimmed = text.trim();
+        int firstSpace = trimmed.indexOf(' ');
+        if (firstSpace == -1) {
+            return "";
+        }
+
+        return trimmed.substring(firstSpace + 1).trim();
     }
 
     private void execute(SendMessage msg) {

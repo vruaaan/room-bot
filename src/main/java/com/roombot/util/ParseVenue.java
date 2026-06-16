@@ -17,7 +17,7 @@ public class ParseVenue {
     );
 
     private static final List<String> STUDYROOM = List.of(
-        "study room ", "12 study room", "level 12 study room ", "12 study rm", "level 12 study rm"
+        "study room", "12 study room", "level 12 study room", "12 study rm", "level 12 study rm"
     );
 
     public static Optional <String> parse(String input) {

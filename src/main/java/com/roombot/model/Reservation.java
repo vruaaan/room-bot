@@ -1,5 +1,4 @@
 package com.roombot.model;
-import com.roombot.util.ParseMessage;
 
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
@@ -47,6 +46,10 @@ public class Reservation {
         return teleHandle;
     }
 
+    public String getId() {
+        return id;
+    }
+
     private LocalDateTime startDateTime() { 
         return dateStart.atTime(timeStart); 
     }
@@ -67,7 +70,7 @@ public class Reservation {
 
     public Map<String, Object> toPayload() { // convert to Firestore payload
         Map<String, Object> m = new LinkedHashMap<>();
-        m.put("tele_handle", teleHandle);
+        m.put("telehandle", teleHandle);
         m.put("chatId", chatId);
         m.put("venue", venue);
         m.put("date_start", dateStart.format(DATE_FMT));
@@ -81,7 +84,7 @@ public class Reservation {
 
     public static Reservation dbToRes(DocumentSnapshot doc) { // converts the data from firestore into a Reservation object
         Reservation r = new Reservation(
-                doc.getString("tele_handle"),
+                doc.getString("telehandle"),
                 doc.getString("chatId"),
                 doc.getString("venue"),
                 LocalDate.parse(doc.getString("date_start"), DATE_FMT),
@@ -91,6 +94,10 @@ public class Reservation {
         r.id = doc.getId();
         return r;
     }
+
+    public boolean passed(LocalDateTime given) {
+        return !endDateTime().isAfter(given);
+    } 
 
     @Override
     public String toString() {

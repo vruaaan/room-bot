@@ -2,14 +2,22 @@ package com.roombot.commands;
 
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-public class MineCmd extends Cmd {
+import com.roombot.service.ReservationSvc;
 
-    public MineCmd(TelegramClient telegramClient) {
-        super(telegramClient); // calling constructor from superclass
+import com.roombot.util.ParseMessage;
+
+public class MineCmd extends Cmd {
+    public MineCmd(TelegramClient telegramClient, ReservationSvc resSvc) {
+        super(telegramClient, resSvc); // calling constructor from superclas
     }
 
-    @Override
-    public void execute(String chatId, String text) { // INCOMPLETE
-        sendMarkdown(chatId, "*Available rooms:* ...");
+    public void execute(String chatId, String teleHandle, String text) {
+        try {
+            String response = ParseMessage.parseMine(teleHandle, resSvc.findByUser(teleHandle));
+            sendText(chatId,response);
+        } catch (Exception e) {
+            System.err.println("/tdy failed: " + e.getMessage());
+            sendText(chatId, "Something went wrong, please try again");
+        }
     }
 }
