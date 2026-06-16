@@ -78,7 +78,17 @@ cp .env.example .env
 
 ```env
 BOT_TOKEN=your_telegram_bot_token_here
+VENUES=12L:12,12l,12 lounge;13L:13,13l,13 lounge
 ```
+
+`VENUES` uses this format:
+
+```text
+CanonicalName:alias,alias,alias;OtherCanonicalName:alias,alias,alias
+```
+
+The canonical name is what gets saved in Firestore. Each alias is a user-facing
+input that the bot will accept.
 
 ### 2. Add Firebase credentials
 
@@ -136,12 +146,18 @@ example, `13`, `13l`, and `13 lounge` are saved as `13L`.
 
 ## Supported Venues
 
-| Canonical value | Accepted examples |
-|---|---|
-| `12L` | `12`, `12l`, `12 lounge`, `level 12 lounge`, `lvl 12 lounge` |
-| `13L` | `13`, `13l`, `13 lounge`, `level 13 lounge`, `lvl 13 lounge` |
-| `14L` | `14`, `14l`, `14 lounge`, `level 14 lounge`, `lvl 14 lounge` |
-| `StudyRoom` | `study room`, `12 study room`, `level 12 study room`, `12 study rm`, `level 12 study rm` |
+Venues are configured through the `VENUES` environment variable. The repository
+includes this default example in `.env.example`:
+
+```env
+VENUES=12L:12,12l,12 lounge,level 12 lounge,lvl 12 lounge;13L:13,13l,13 lounge,level 13 lounge,lvl 13 lounge;14L:14,14l,14 lounge,level 14 lounge,lvl 14 lounge;StudyRoom:study room,12 study room,level 12 study room,12 study rm,level 12 study rm
+```
+
+To add a new venue, append another semicolon-separated entry:
+
+```env
+VENUES=12L:12,12l;13L:13,13l;MusicRoom:music room,music rm,mr
+```
 
 ## Supported Dates
 
