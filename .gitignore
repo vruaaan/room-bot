@@ -2,6 +2,9 @@
 .env
 firebaseaccount.json
 
+#config for venues
+venues.json
+
 # Maven build output
 target/
 

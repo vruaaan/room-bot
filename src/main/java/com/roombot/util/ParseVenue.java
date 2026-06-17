@@ -1,21 +1,20 @@
 package com.roombot.util;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ParseVenue {
-    private static final String DEFAULT_VENUES =
-            "12L:12,12l,12 lounge,level 12 lounge,lvl 12 lounge;" +
-            "13L:13,13l,13 lounge,level 13 lounge,lvl 13 lounge;" +
-            "14L:14,14l,14 lounge,level 14 lounge,lvl 14 lounge;" +
-            "StudyRoom:study room,12 study room,level 12 study room,12 study rm,level 12 study rm";
+import java.util.List;
 
+public class ParseVenue {
+    private static final String VENUES_FILE = "venues.json";
     private static final Map<String, String> VENUE_ALIASES = loadVenueAliases();
 
-    public static Optional <String> parse(String input) {
+    public static Optional<String> parse(String input) {
         if (input == null) {
             return Optional.empty();
         }
@@ -27,43 +26,32 @@ public class ParseVenue {
     }
 
     private static Map<String, String> loadVenueAliases() {
-        Dotenv dotenv = Dotenv.configure()
-                .ignoreIfMissing()
-                .load();
-        String venues = stripQuotes(dotenv.get("VENUES", DEFAULT_VENUES));
+        Map<String, String> venueMap = new HashMap<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper(); // creates a mapper object 
+            Map<String, List<String>> raw = mapper.readValue( 
+                    new File(VENUES_FILE), // reading the file
+                    mapper.getTypeFactory()
+                        .constructMapType(HashMap.class, // class of the map to construct
+                        String.class, // class of the key 
+                        List.class)); // class of the value
 
-        Map<String, String> aliases = new HashMap<>();
-        for (String venueConfig : venues.split(";")) {
-            String[] parts = venueConfig.split(":", 2);
-            if (parts.length != 2) {
-                continue;
-            }
-
-            String canonical = parts[0].trim();
-            if (canonical.isBlank()) {
-                continue;
-            }
-
-            aliases.put(canonical.toLowerCase(), canonical);
-            for (String alias : parts[1].split(",")) {
-                String normalisedAlias = alias.trim().toLowerCase();
-                if (!normalisedAlias.isBlank()) {
-                    aliases.put(normalisedAlias, canonical);
+            for (Map.Entry<String, List<String>> entry : raw.entrySet()) {
+                String key = entry.getKey().trim();
+                if (key.isBlank()) {
+                    continue;
+                }
+                venueMap.put(key.toLowerCase(), key); // adds the normalised name to the map 
+                for (String altName : entry.getValue()) { // iterates over the array of alternative names
+                    String normalisedAltName = altName.trim().toLowerCase(); // normalises the alternative names 
+                    if (!normalisedAltName.isBlank()) {
+                        venueMap.put(normalisedAltName, key); // puts the alternative names in
+                    }
                 }
             }
+        } catch (IOException e) {
+            System.err.println("Failed to load " + VENUES_FILE + ": " + e.getMessage());
         }
-
-        return aliases;
+        return venueMap;
     }
-
-    private static String stripQuotes(String value) {
-        String trimmed = value.trim();
-        if (trimmed.length() >= 2 &&
-                ((trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
-                (trimmed.startsWith("'") && trimmed.endsWith("'")))) {
-            return trimmed.substring(1, trimmed.length() - 1);
-        }
-        return trimmed;
-    }
-
 }
