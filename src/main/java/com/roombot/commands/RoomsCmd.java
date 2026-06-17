@@ -27,5 +27,4 @@ public class RoomsCmd extends Cmd {
         }
     }
 
-
 }

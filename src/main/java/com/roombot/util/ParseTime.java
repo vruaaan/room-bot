@@ -17,7 +17,7 @@ public class ParseTime {
     private static final Pattern MILITARY = Pattern.compile("^(\\d{2})(\\d{2})$");
 
     public static Optional<LocalTime> parse(String input) {
-        if (input == null) { 
+        if (input == null) {
             return Optional.empty();
         }
         String normalised = input.trim().toLowerCase();
@@ -37,25 +37,25 @@ public class ParseTime {
             String period = m12.group(3);
 
             if (hour < 1 || hour > 12 || minute > 59) {
-                return Optional.empty(); // invalid format for time 
+                return Optional.empty(); // invalid format for time
             }
             if (period.equals("am")) { // am
-                hour = (hour == 12) ? 0 : hour;  
+                hour = (hour == 12) ? 0 : hour;
             } else { // pm
                 hour = (hour == 12) ? 12 : hour + 12;
             }
             return Optional.of(LocalTime.of(hour, minute));
         }
-        Matcher m24 = TWENTYFOUR_HR.matcher(normalised); // 24-hour colon format 
+        Matcher m24 = TWENTYFOUR_HR.matcher(normalised); // 24-hour colon format
         if (m24.matches()) {
             int hour = Integer.parseInt(m24.group(1));
             int minute = Integer.parseInt(m24.group(2));
-            if (hour > 23 || minute > 59) { // invalid format for time 
+            if (hour > 23 || minute > 59) { // invalid format for time
                 return Optional.empty();
             }
             return Optional.of(LocalTime.of(hour, minute));
         }
-        Matcher mil = MILITARY.matcher(normalised); // military compact format (e.g. "0900", "1530") 
+        Matcher mil = MILITARY.matcher(normalised); // military compact format (e.g. "0900", "1530")
         if (mil.matches()) {
             int hour = Integer.parseInt(mil.group(1));
             int minute = Integer.parseInt(mil.group(2));

@@ -1,4 +1,5 @@
 package com.roombot.commands;
+
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -24,10 +25,10 @@ public abstract class Cmd {
         this.telegramClient = telegramClient;
         this.resSvc = resSvc;
     }
-    
-    public abstract void execute(String chatId, String teleHandle, String text); // must be implemented by subclasses 
 
-    //helper functions that all other commands can call 
+    public abstract void execute(String chatId, String teleHandle, String text); // must be implemented by subclasses
+
+    // helper functions that all other commands can call
     protected void sendText(String chatId, String text) {
         SendMessage msg = SendMessage.builder()
                 .chatId(chatId)
@@ -57,10 +58,11 @@ public abstract class Cmd {
         return trimmed.substring(firstSpace + 1).trim();
     }
 
-    protected String buildErrorMessage(Optional<String> venue, Optional<LocalDate> date, Optional<LocalTime> start, Optional<LocalTime> end) {
+    protected String buildErrorMessage(Optional<String> venue, Optional<LocalDate> date, Optional<LocalTime> start,
+            Optional<LocalTime> end) {
         if (venue.isEmpty() && date.isEmpty()) {
-            return VENUEDATEISSUE; 
-        }else if (date.isEmpty()) {
+            return VENUEDATEISSUE;
+        } else if (date.isEmpty()) {
             return DATEISSUE;
         } else if (start.isEmpty()) {
             return TIMEISSUE;
@@ -90,7 +92,8 @@ public abstract class Cmd {
         return String.join(" ", Arrays.copyOfRange(parts, from, to));
     }
 
-    protected record VenueDate(String venue, LocalDate date) {}
+    protected record VenueDate(String venue, LocalDate date) {
+    }
 
     private void execute(SendMessage msg) {
         try {

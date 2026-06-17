@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 public class Reservation {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd
@@ -26,9 +25,9 @@ public class Reservation {
     private final LocalDate dateEnd;
     private final LocalTime timeEnd;
 
-    public Reservation(String teleHandle, String chatId, String venue, 
-        LocalDate dateStart, LocalTime timeStart,
-        LocalDate dateEnd, LocalTime timeEnd) {
+    public Reservation(String teleHandle, String chatId, String venue,
+            LocalDate dateStart, LocalTime timeStart,
+            LocalDate dateEnd, LocalTime timeEnd) {
         this.teleHandle = teleHandle;
         this.chatId = chatId;
         this.venue = venue;
@@ -50,22 +49,22 @@ public class Reservation {
         return id;
     }
 
-    private LocalDateTime startDateTime() { 
-        return dateStart.atTime(timeStart); 
+    private LocalDateTime startDateTime() {
+        return dateStart.atTime(timeStart);
     }
 
-    private LocalDateTime endDateTime() { 
-        return dateEnd.atTime(timeEnd); 
+    private LocalDateTime endDateTime() {
+        return dateEnd.atTime(timeEnd);
     }
 
     private double getDurationHours() {
         return Duration.between(startDateTime(), endDateTime()).toMinutes() / 60.0;
     }
 
-    public boolean clashing (Reservation other) { // to compare if 2 bookings are clashing
+    public boolean clashing(Reservation other) { // to compare if 2 bookings are clashing
         return other.venue.equals(this.venue) && // same venue
-            startDateTime().isBefore(other.endDateTime()) && // start before other ends
-            other.startDateTime().isBefore(endDateTime()); // other starts before current ends
+                startDateTime().isBefore(other.endDateTime()) && // start before other ends
+                other.startDateTime().isBefore(endDateTime()); // other starts before current ends
     }
 
     public Map<String, Object> toPayload() { // convert to Firestore payload
@@ -82,7 +81,8 @@ public class Reservation {
         return m;
     }
 
-    public static Reservation dbToRes(DocumentSnapshot doc) { // converts the data from firestore into a Reservation object
+    public static Reservation dbToRes(DocumentSnapshot doc) { // converts the data from firestore into a Reservation
+                                                              // object
         Reservation r = new Reservation(
                 doc.getString("telehandle"),
                 doc.getString("chatId"),
@@ -97,19 +97,19 @@ public class Reservation {
 
     public boolean passed(LocalDateTime given) {
         return !endDateTime().isAfter(given);
-    } 
+    }
 
     public boolean matches(String venue, LocalDate date, LocalTime start, LocalTime end) {
         return this.venue.equals(venue)
-            && this.dateStart.equals(date)
-            && this.timeStart.equals(start)
-            && this.timeEnd.equals(end);
+                && this.dateStart.equals(date)
+                && this.timeStart.equals(start)
+                && this.timeEnd.equals(end);
     }
 
     public String cancelString() {
         return "Booking for " + venue + " on " + dateStart + " (" + timeStart + " - " + timeEnd + ") cancelled";
     }
-    
+
     @Override
     public String toString() {
         if (dateStart.equals(dateEnd)) {

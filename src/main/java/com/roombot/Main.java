@@ -15,7 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Main { // entry point — composition root, loads config, wires services, registers the bot, starts the reminder scheduler
+public class Main { // entry point — composition root, loads config, wires services, registers the
+                    // bot, starts the reminder scheduler
     public static void main(String[] args) throws Exception {
         // 1. config
         Dotenv dotenv = Dotenv.load();

@@ -16,7 +16,7 @@ public class TodayCmd extends Cmd {
         LocalDate tdy = LocalDate.now();
         try {
             String response = ParseMessage.parseDate(tdy, resSvc.findByDate(tdy));
-            sendText(chatId,response);
+            sendText(chatId, response);
         } catch (Exception e) {
             System.err.println("/tdy failed: " + e.getMessage());
             sendText(chatId, "Something went wrong, please try again");

@@ -1,4 +1,5 @@
 package com.roombot.util;
+
 import com.roombot.model.Reservation;
 
 import java.util.List;
@@ -6,11 +7,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ParseMessage {
-    public static String parseBooked(String venue, LocalDate date, LocalTime timeStart, LocalTime timeEnd, String telehandle) { // used by /book
+    public static String parseBooked(String venue, LocalDate date, LocalTime timeStart, LocalTime timeEnd,
+            String telehandle) { // used by /book
         return "venue: " + venue + "\n" +
-            "date : " + date.toString() + "\n" +
-            "time  : " + timeStart.toString() + " - " + timeEnd.toString() + "\n" +
-            "poc: " + telehandle;
+                "date : " + date.toString() + "\n" +
+                "time  : " + timeStart.toString() + " - " + timeEnd.toString() + "\n" +
+                "poc: " + telehandle;
     }
 
     public static String parseCancelled(Reservation res) { // used by /book
@@ -18,41 +20,37 @@ public class ParseMessage {
     }
 
     public static String parseMine(String telehandle, List<Reservation> resList) { // used by /mine
-        if (resList.isEmpty()){
+        if (resList.isEmpty()) {
             return "You have no bookings made !";
-        }
-        else {
+        } else {
             return "Bookings made by " + telehandle + ":" + "\n" +
-                ParseMessage.convResList(resList, false);
+                    ParseMessage.convResList(resList, false);
         }
     }
 
     public static String parseDate(LocalDate date, List<Reservation> resList) { // used by /date, /today, /tmr
-        if (resList.isEmpty()){
+        if (resList.isEmpty()) {
             return "No Bookings made for " + date.toString();
-        }
-        else {
-            return "Bookings made for " + date.toString() + ":" + "\n" + 
-                ParseMessage.convResList(resList, true);
+        } else {
+            return "Bookings made for " + date.toString() + ":" + "\n" +
+                    ParseMessage.convResList(resList, true);
         }
     }
 
-    public static String parseRoom(String venue, List<Reservation> resList){ // used by /room 
-        if (resList.isEmpty()){
+    public static String parseRoom(String venue, List<Reservation> resList) { // used by /room
+        if (resList.isEmpty()) {
             return "No bookings made for " + venue;
-        }
-        else {
-            return "Bookings made for " + venue + ":" + "\n" + 
-                ParseMessage.convResList(resList, true);
+        } else {
+            return "Bookings made for " + venue + ":" + "\n" +
+                    ParseMessage.convResList(resList, true);
         }
     }
 
-    private static String convResList(List<Reservation> resList, Boolean showPOC){ // private helper
+    private static String convResList(List<Reservation> resList, Boolean showPOC) { // private helper
         if (showPOC) {
             return resList.stream().map(r -> r.toString() + " by " + r.getPOC() + "\n").reduce("", (x, y) -> x + y);
         }
         return resList.stream().map(r -> r.toString() + "\n").reduce("", (x, y) -> x + y);
     }
-
 
 }

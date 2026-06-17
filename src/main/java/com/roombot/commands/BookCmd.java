@@ -13,10 +13,9 @@ import java.util.Optional;
 
 public class BookCmd extends Cmd {
 
-    private static final String USAGE =
-        "Usage: /book <venue> <date> <start> <end>\n" +
-        "Example: /book 13L tomorrow 2pm 4pm";
-        
+    private static final String USAGE = "Usage: /book <venue> <date> <start> <end>\n" +
+            "Example: /book 13L tomorrow 2pm 4pm";
+
     public BookCmd(TelegramClient telegramClient, ReservationSvc resSvc) {
         super(telegramClient, resSvc);
     }
@@ -25,7 +24,7 @@ public class BookCmd extends Cmd {
     public void execute(String chatId, String teleHandle, String text) {
         String args = this.parseArgs(text);
         String[] parts = args.split("\\s+"); // to split by amount of whitespace
-        if (parts.length < 4) { // for improper usage 
+        if (parts.length < 4) { // for improper usage
             sendText(chatId, USAGE); // return usage message
             return;
         }
@@ -42,13 +41,15 @@ public class BookCmd extends Cmd {
         }
         VenueDate parsed = bookArgs.get();
         LocalTime s = start.get();
-        LocalTime e = end.get();    
-        LocalDate dateEnd = !e.isAfter(s) ? parsed.date().plusDays(1) : parsed.date(); // overnight inference, if end <= start, the booking spans into the next day
+        LocalTime e = end.get();
+        LocalDate dateEnd = !e.isAfter(s) ? parsed.date().plusDays(1) : parsed.date(); // overnight inference, if end <=
+                                                                                       // start, the booking spans into
+                                                                                       // the next day
         Reservation res = new Reservation(teleHandle, chatId, parsed.venue(), parsed.date(), s, dateEnd, e);
         try {
             if (resSvc.hasConflict(res)) {
                 sendText(chatId, "This slot clashes with an existing booking.");
-                return; // to break the loop 
+                return; // to break the loop
             }
             resSvc.create(res);
             sendText(chatId, ParseMessage.parseBooked(parsed.venue(), parsed.date(), s, e, teleHandle));

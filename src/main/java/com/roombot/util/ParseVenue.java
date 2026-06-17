@@ -28,22 +28,22 @@ public class ParseVenue {
     private static Map<String, String> loadVenueAliases() {
         Map<String, String> venueMap = new HashMap<>();
         try {
-            ObjectMapper mapper = new ObjectMapper(); // creates a mapper object 
-            Map<String, List<String>> raw = mapper.readValue( 
+            ObjectMapper mapper = new ObjectMapper(); // creates a mapper object
+            Map<String, List<String>> raw = mapper.readValue(
                     new File(VENUES_FILE), // reading the file
                     mapper.getTypeFactory()
-                        .constructMapType(HashMap.class, // class of the map to construct
-                        String.class, // class of the key 
-                        List.class)); // class of the value
+                            .constructMapType(HashMap.class, // class of the map to construct
+                                    String.class, // class of the key
+                                    List.class)); // class of the value
 
             for (Map.Entry<String, List<String>> entry : raw.entrySet()) {
                 String key = entry.getKey().trim();
                 if (key.isBlank()) {
                     continue;
                 }
-                venueMap.put(key.toLowerCase(), key); // adds the normalised name to the map 
+                venueMap.put(key.toLowerCase(), key); // adds the normalised name to the map
                 for (String altName : entry.getValue()) { // iterates over the array of alternative names
-                    String normalisedAltName = altName.trim().toLowerCase(); // normalises the alternative names 
+                    String normalisedAltName = altName.trim().toLowerCase(); // normalises the alternative names
                     if (!normalisedAltName.isBlank()) {
                         venueMap.put(normalisedAltName, key); // puts the alternative names in
                     }

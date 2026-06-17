@@ -10,8 +10,7 @@ import java.util.Optional;
 
 public class CancelCmd extends Cmd {
 
-    private static final String USAGE =
-            "Usage: /cancel <venue> <date> <start> <end>\n" +
+    private static final String USAGE = "Usage: /cancel <venue> <date> <start> <end>\n" +
             "Example: /cancel 13L tomorrow 2pm 4pm";
 
     private static final String NOT_FOUND = "No matching bookings found";
@@ -62,9 +61,9 @@ public class CancelCmd extends Cmd {
     private Optional<Reservation> findMatch(VenueDate venuedate, LocalTime start, LocalTime end)
             throws Exception {
         return resSvc.findByVenue(venuedate.venue())
-            .stream()
-            .filter(r -> r.matches(venuedate.venue(), venuedate.date(), start, end))
-            .findFirst();
+                .stream()
+                .filter(r -> r.matches(venuedate.venue(), venuedate.date(), start, end))
+                .findFirst();
     }
 
 }

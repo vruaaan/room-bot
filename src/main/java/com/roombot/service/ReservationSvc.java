@@ -15,7 +15,7 @@ public class ReservationSvc { // additional layer that utilises CRUD functions f
     public ReservationSvc(FirestoreSvc store) {
         this.store = store; // storing the database
     }
-    
+
     public String create(Reservation reservation) // creates reservation inside firestore
             throws ExecutionException, InterruptedException {
         return store.save(COLLECTION, reservation.toPayload());
@@ -31,16 +31,16 @@ public class ReservationSvc { // additional layer that utilises CRUD functions f
     }
 
     public void delete(String bookingId)
-        throws ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException {
         store.delete(COLLECTION, bookingId);
     }
 
-    public List<Reservation> findAll() // find all data 
+    public List<Reservation> findAll() // find all data
             throws ExecutionException, InterruptedException {
         return dbToRes(store.findAll(COLLECTION));
     }
 
-    public List<Reservation> findByVenue(String venue) // find 
+    public List<Reservation> findByVenue(String venue) // find
             throws ExecutionException, InterruptedException {
         return dbToRes(store.findWhere(COLLECTION, "venue", venue));
     }
@@ -60,7 +60,7 @@ public class ReservationSvc { // additional layer that utilises CRUD functions f
         return findByVenue(candidate.getVenue()).stream().anyMatch(r -> candidate.clashing(r));
     }
 
-    private static List<Reservation> dbToRes(List<QueryDocumentSnapshot> docs) {  
+    private static List<Reservation> dbToRes(List<QueryDocumentSnapshot> docs) {
         return docs.stream().map(d -> Reservation.dbToRes(d)).toList();
     }
 }

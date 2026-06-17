@@ -15,8 +15,8 @@ public class TmrCmd extends Cmd {
     public void execute(String chatId, String teleHandle, String text) {
         LocalDate tmr = LocalDate.now().plusDays(1);
         try {
-            String response = ParseMessage.parseDate(tmr ,resSvc.findByDate(tmr));
-            sendText(chatId,response);
+            String response = ParseMessage.parseDate(tmr, resSvc.findByDate(tmr));
+            sendText(chatId, response);
         } catch (Exception e) {
             System.err.println("/tmr failed: " + e.getMessage());
             sendText(chatId, "Something went wrong, please try again");

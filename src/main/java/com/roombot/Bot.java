@@ -12,6 +12,7 @@ import com.roombot.commands.TmrCmd;
 import com.roombot.commands.TodayCmd;
 import com.roombot.commands.UnknownCmd;
 import com.roombot.service.ReservationSvc;
+
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -57,7 +58,6 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
         Cmd handler = commands.getOrDefault(key, unknownCmd);
         handler.execute(chatId, userHandle, text);
     }
-
 
     private static String resolveHandle(Message message) {
         if (message.getFrom() != null && message.getFrom().getUserName() != null) {
