@@ -2,6 +2,7 @@
 package com.roombot;
 
 import com.roombot.commands.BookCmd;
+import com.roombot.commands.CancelCmd;
 import com.roombot.commands.Cmd;
 import com.roombot.commands.DateCmd;
 import com.roombot.commands.HelpCmd;
@@ -31,6 +32,7 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
         commands.put("/book", new BookCmd(telegramClient, reservations));
         commands.put("/tdy", new TodayCmd(telegramClient, reservations));
         commands.put("/tmr", new TmrCmd(telegramClient, reservations));
+        commands.put("/cancel", new CancelCmd(telegramClient, reservations));
 
         HelpCmd help = new HelpCmd(telegramClient, reservations);
         commands.put("/help", help);
