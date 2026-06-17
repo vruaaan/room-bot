@@ -31,6 +31,7 @@ src/main/java/com/roombot/
 ├── commands/
 |   ├── Cmd.java                 # Base command class with send and argument helpers
 |   ├── BookCmd.java             # /book - create a booking
+|   ├── CancelCmd.java           # /cancel - cancel a booking
 |   ├── RoomsCmd.java            # /rooms - bookings for a venue
 |   ├── DateCmd.java             # /date - bookings for a date
 |   ├── TodayCmd.java            # /tdy - today's bookings
@@ -142,6 +143,7 @@ java -jar target/telegram-reminder-bot-1.0-SNAPSHOT.jar
 | Command | Description |
 |---|---|
 | `/book <venue> <date> <start> <end>` | Create a booking if it does not clash with an existing booking for that venue |
+| `/cancel <venue> <date> <start> <end>` | Cancels a booking if it is made by the user |
 | `/rooms <venue>` | Show bookings for a venue |
 | `/date <date>` | Show bookings for a date |
 | `/tdy` | Show today's bookings |
