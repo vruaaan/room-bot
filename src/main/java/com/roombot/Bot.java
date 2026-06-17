@@ -27,7 +27,7 @@ public class Bot implements LongPollingSingleThreadUpdateConsumer {
         // register commands
         commands.put("/rooms", new RoomsCmd(telegramClient, reservations));
         commands.put("/date", new DateCmd(telegramClient, reservations));
-        commands.put("/mybookings", new MineCmd(telegramClient, reservations));
+        commands.put("/mine", new MineCmd(telegramClient, reservations));
         commands.put("/book", new BookCmd(telegramClient, reservations));
         commands.put("/tdy", new TodayCmd(telegramClient, reservations));
         commands.put("/tmr", new TmrCmd(telegramClient, reservations));
