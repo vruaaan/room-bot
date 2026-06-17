@@ -38,6 +38,17 @@ public class Reservation {
         this.timeEnd = timeEnd;
     }
 
+    public Reservation(String venue, LocalDate dateStart, LocalTime timeStart, 
+                                    LocalDate dateEnd, LocalTime timeEnd) {
+        this.teleHandle = "";
+        this.chatId = "";
+        this.venue = venue;
+        this.dateStart = dateStart;
+        this.timeStart = timeStart;
+        this.dateEnd = dateEnd;
+        this.timeEnd = timeEnd;
+    }
+
     public String getVenue() {
         return venue;
     }
@@ -99,10 +110,29 @@ public class Reservation {
         return !endDateTime().isAfter(given);
     } 
 
+    public String cancelString() {
+        return "Booking for " + venue + " on " + dateStart + " (" + timeStart + " - " + timeEnd + ") cancelled";
+    }
+
     @Override
     public String toString() {
-        return venue + " booked on " + dateStart + ": " + timeStart.toString() + " - " + timeEnd.toString();
+        return venue + " booked on " + dateStart + ": " + timeStart + " - " + timeEnd;
     }   
 
+    @Override 
+    public boolean equals(Object other) {
+        if (other instanceof Reservation res) {
+            if (res.venue != this.venue) { // if the venues already not same
+                return false; // not equal 
+            }
+            return res.dateStart == this.dateStart && 
+                res.dateEnd == this.dateEnd && 
+                res.timeStart == this.timeStart &&
+                res.timeEnd == this.timeEnd;
+        }
+        return false;
+    }
+
+    
 
 }

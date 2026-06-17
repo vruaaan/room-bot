@@ -30,6 +30,11 @@ public class ReservationSvc { // additional layer that utilises CRUD functions f
         }
     }
 
+    public void delete(String bookingId)
+        throws ExecutionException, InterruptedException {
+        store.delete(COLLECTION, bookingId);
+    }
+
     public List<Reservation> findAll() // find all data 
             throws ExecutionException, InterruptedException {
         return dbToRes(store.findAll(COLLECTION));

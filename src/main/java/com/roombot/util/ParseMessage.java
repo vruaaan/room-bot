@@ -3,13 +3,18 @@ import com.roombot.model.Reservation;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ParseMessage {
-    public static String parseBooked(String venue, String date, String timeStart, String timeEnd, String telehandle) { // used by /book
+    public static String parseBooked(String venue, LocalDate date, LocalTime timeStart, LocalTime timeEnd, String telehandle) { // used by /book
         return "venue: " + venue + "\n" +
-            "date : " + date + "\n" +
-            "time  : " + timeStart + " - " + timeEnd + "\n" +
+            "date : " + date.toString() + "\n" +
+            "time  : " + timeStart.toString() + " - " + timeEnd.toString() + "\n" +
             "poc: " + telehandle;
+    }
+
+    public static String parseCancelled(Reservation res) { // used by /book
+        return res.cancelString();
     }
 
     public static String parseMine(String telehandle, List<Reservation> resList) { // used by /mine
