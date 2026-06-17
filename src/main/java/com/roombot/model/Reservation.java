@@ -112,7 +112,10 @@ public class Reservation {
     
     @Override
     public String toString() {
-        return venue + " booked on " + dateStart + ": " + timeStart + " - " + timeEnd;
-    }   
+        if (dateStart.equals(dateEnd)) {
+            return venue + " booked on " + dateStart + ": " + timeStart + " - " + timeEnd;
+        }
+        return venue + " booked " + dateStart + " " + timeStart + " to " + dateEnd + " " + timeEnd;
+    }
 
 }

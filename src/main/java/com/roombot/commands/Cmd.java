@@ -18,7 +18,7 @@ public abstract class Cmd {
     private static final String DATEISSUE = "I couldn't understand the date";
     private static final String TIMEISSUE = "I couldn't understand the time. Try formats like 2pm, 14:00 or 1400.";
     private static final String TIMELOGIC = "End time must be after the start time.";
-    private static final String VENUEDATEISSUE = "Ed time must be after the start time.";
+    private static final String VENUEDATEISSUE = "I couldn't understand the venue or time, refer to the proper formatting under /help";
 
     Cmd(TelegramClient telegramClient, ReservationSvc resSvc) { // called by subclasses
         this.telegramClient = telegramClient;

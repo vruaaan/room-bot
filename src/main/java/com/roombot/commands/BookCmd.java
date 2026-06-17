@@ -7,7 +7,7 @@ import com.roombot.util.ParseTime;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.time.LocalTime;
-
+import java.time.LocalDate;
 
 import java.util.Optional;
 
@@ -41,16 +41,19 @@ public class BookCmd extends Cmd {
             return;
         }
         VenueDate parsed = bookArgs.get();
-        Reservation res = new Reservation(teleHandle, chatId, parsed.venue(), parsed.date(), start.get(), parsed.date(), end.get());
+        LocalTime s = start.get();
+        LocalTime e = end.get();    
+        LocalDate dateEnd = !e.isAfter(s) ? parsed.date().plusDays(1) : parsed.date(); // overnight inference, if end <= start, the booking spans into the next day
+        Reservation res = new Reservation(teleHandle, chatId, parsed.venue(), parsed.date(), s, dateEnd, e);
         try {
             if (resSvc.hasConflict(res)) {
                 sendText(chatId, "This slot clashes with an existing booking.");
                 return; // to break the loop 
             }
             resSvc.create(res);
-            sendText(chatId, ParseMessage.parseBooked(parsed.venue(), parsed.date(), start.get(), end.get(), teleHandle ));
-        } catch (Exception e) {
-            System.err.println("/book save failed: " + e.getMessage());
+            sendText(chatId, ParseMessage.parseBooked(parsed.venue(), parsed.date(), s, e, teleHandle));
+        } catch (Exception ex) {
+            System.err.println("/book save failed: " + ex.getMessage());
             sendText(chatId, "Something went wrong, please try again.");
         }
     }
