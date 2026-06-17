@@ -287,7 +287,6 @@ No matching bookings found
 Booking found not made by you
 ```
 
-
 ### `/rooms` , `/date` , `tdy` , `/tmr`
 
 #### If there are bookings made
@@ -315,22 +314,6 @@ Bookings made by @vruaaan:
 You have no bookings made !
 ```
 
-### General Error Messages
-
-#### Invalid venue or date
-```text
-I couldn't understand the venue or date.
-```
-
-#### Invalid date only
-```text
-I couldn't understand the date
-```
-
-#### Invalid time format
-```text
-I couldn't understand the time. Try formats like 2pm, 14:00 or 1400.
-```
 
 ### `/help` , `/start`
 ````markdown 
@@ -375,6 +358,25 @@ today, tdy, tonight, tomorrow, tmr, mon, next fri, next next mon, 15 jun, jun 15
 - Numeric dates are read as day-month-year, not year-month-year.
 - You can only cancel bookings made under your own Telegram username.
 ````
+
+### General Error Messages
+
+#### Invalid venue or date
+```text
+I couldn't understand the venue or date.
+```
+
+#### Invalid date only
+```text
+I couldn't understand the date
+```
+
+#### Invalid time format
+```text
+I couldn't understand the time. Try formats like 2pm, 14:00 or 1400.
+```
+
+
 
 ### Unknown command
 ```text
