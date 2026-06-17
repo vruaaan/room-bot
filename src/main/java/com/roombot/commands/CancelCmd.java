@@ -5,9 +5,7 @@ import com.roombot.service.ReservationSvc;
 import com.roombot.util.ParseTime;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 public class CancelCmd extends Cmd {
@@ -36,6 +34,7 @@ public class CancelCmd extends Cmd {
         Optional<VenueDate> cancelArgs = parseCancelBookArgs(parts);
         if (cancelArgs.isEmpty() || start.isEmpty() || end.isEmpty() || !end.get().isAfter(start.get())) {
             sendText(chatId, buildErrorMessage( // returning error message if missing fields
+                    cancelArgs.map(ca -> ca.venue()),
                     cancelArgs.map(ca -> ca.date()),
                     start,
                     end));
@@ -62,13 +61,10 @@ public class CancelCmd extends Cmd {
 
     private Optional<Reservation> findMatch(VenueDate venuedate, LocalTime start, LocalTime end)
             throws Exception {
-        List<Reservation> sameVenue = resSvc.findByVenue(venuedate.venue());
-        LocalDate date = venuedate.date();
-        String venue = venuedate.venue();
-        Reservation dummy = new Reservation(venue, date, start, date, end);
-        return sameVenue.stream()
-                .filter(r -> r.equals(dummy))
-                .findFirst();
+        return resSvc.findByVenue(venuedate.venue())
+            .stream()
+            .filter(r -> r.matches(venuedate.venue(), venuedate.date(), start, end))
+            .findFirst();
     }
 
 }

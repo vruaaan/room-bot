@@ -34,6 +34,7 @@ public class BookCmd extends Cmd {
         Optional<VenueDate> bookArgs = parseCancelBookArgs(parts);
         if (bookArgs.isEmpty() || start.isEmpty() || end.isEmpty() || !end.get().isAfter(start.get())) {
             sendText(chatId, buildErrorMessage(
+                    bookArgs.map(ba -> ba.venue()),
                     bookArgs.map(ba -> ba.date()),
                     start,
                     end));

@@ -18,6 +18,7 @@ public abstract class Cmd {
     private static final String DATEISSUE = "I couldn't understand the date";
     private static final String TIMEISSUE = "I couldn't understand the time. Try formats like 2pm, 14:00 or 1400.";
     private static final String TIMELOGIC = "End time must be after the start time.";
+    private static final String VENUEDATEISSUE = "Ed time must be after the start time.";
 
     Cmd(TelegramClient telegramClient, ReservationSvc resSvc) { // called by subclasses
         this.telegramClient = telegramClient;
@@ -56,8 +57,10 @@ public abstract class Cmd {
         return trimmed.substring(firstSpace + 1).trim();
     }
 
-    protected String buildErrorMessage(Optional<LocalDate> date, Optional<LocalTime> start, Optional<LocalTime> end) {
-        if (date.isEmpty()) {
+    protected String buildErrorMessage(Optional<String> venue, Optional<LocalDate> date, Optional<LocalTime> start, Optional<LocalTime> end) {
+        if (venue.isEmpty() && date.isEmpty()) {
+            return VENUEDATEISSUE; 
+        }else if (date.isEmpty()) {
             return DATEISSUE;
         } else if (start.isEmpty()) {
             return TIMEISSUE;
