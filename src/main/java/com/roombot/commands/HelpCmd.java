@@ -34,7 +34,10 @@ public class HelpCmd extends Cmd {
             /help, /start — show this message
 
             *Accepted venues*
-            Defined in venues.json — ask your admin if you're unsure which names are recognised.
+              12L recognised as : "12", "12l", "12 lounge", "level 12 lounge", "lvl 12 lounge"
+              13L recognised as : "13", "13l", "13 lounge", "level 13 lounge", "lvl 13 lounge"
+              14L recognised as : "14", "14l", "14 lounge", "level 14 lounge", "lvl 14 lounge"
+              12 study room recognised as : "study room", "12 study room", "level 12 study room", "12 study rm", "level 12 study rm"
 
             *Accepted dates*
             today, tdy, tonight, tomorrow, tmr, mon, next fri, next next mon, 15 jun, jun 15, 15-06-2026, 15062026
